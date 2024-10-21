@@ -156,3 +156,12 @@ def check_content_type(media_type):
         f"Content-Type must be {media_type}",
     )
 # This is the new code that I added to the routes.py file
+@app.after_request
+def set_security_headers(response):
+    """Add security headers to every response"""
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['Content-Security-Policy'] = "default-src 'self'; object-src 'none'"
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    return response
